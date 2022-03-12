@@ -1,4 +1,6 @@
-const setspeed = (spind: number) => {
+import speedType from "../types/speed"
+
+const setspeed = (spind: number): speedType => {
     let step, scspeed;
 
     if (spind < 1) spind = 1;
@@ -71,7 +73,7 @@ const setspeed = (spind: number) => {
             break;
     }
 
-    return { step,scspeed } as {[key: string]: number};
+    return { step,scspeed } as speedType;
 }
 
 export default setspeed;

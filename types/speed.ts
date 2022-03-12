@@ -1,0 +1,1 @@
+export default interface speed { step: number; scspeed: number; }
