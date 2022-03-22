@@ -20,6 +20,7 @@ const Home: NextPage = () => {
 
 		const newFontSize = up ? fontSize + 4 : fontSize - 4
 		textarea.style.fontSize = newFontSize.toString() + 'px'
+		localStorage.setItem("fontSize", newFontSize.toString())
 		setFontSize(newFontSize)
 
 		// Hack to fix textarea resizing
@@ -30,9 +31,12 @@ const Home: NextPage = () => {
 		resizeElement(e.target as HTMLInputElement)
 	}
 	// backend resize function
-	const resizeElement = (textArea: HTMLInputElement) => {
+	const resizeElement = (textArea?: HTMLInputElement) => {
+		if (!textArea){
+			textArea = document.getElementById("textArea") as HTMLInputElement
+		}
 		textArea.style.height = "0px"
-		textArea.style.height = textArea.scrollHeight.toString() + "px"
+		textArea.style.height = (textArea.scrollHeight + 1).toString() + "px"
 	}
 
 	// Scrolling
@@ -88,6 +92,12 @@ const Home: NextPage = () => {
 
 	useEffect(() => {
 		document.addEventListener("keypress", keyListener, false)
+		document.addEventListener("paste", ()=>resizeElement(), false)
+
+		if (localStorage.getItem("speed")) setSpeedVal(parseInt(localStorage.getItem("speed")!))
+		else localStorage.setItem("speed", speedVal.toString())
+		if (localStorage.getItem("fontSize")) setFontSize(parseInt(localStorage.getItem("fontSize")!))
+		else localStorage.setItem("fontSize", fontSize.toString())
 	}, [])
 
 	// add listener at mount
@@ -101,6 +111,7 @@ const Home: NextPage = () => {
 	const changeSpeed = (e: MouseEvent, up: boolean)=>{
 		e.preventDefault()
 		const newSpeed = speedVal + (up ? 1 : -1)
+		localStorage.setItem("speed", newSpeed.toString())
 		setSpeedVal(newSpeed)
 		setSpeedObj(speed(newSpeed))
 	}
