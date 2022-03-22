@@ -30,9 +30,12 @@ const Home: NextPage = () => {
 		resizeElement(e.target as HTMLInputElement)
 	}
 	// backend resize function
-	const resizeElement = (textArea: HTMLInputElement) => {
+	const resizeElement = (textArea?: HTMLInputElement) => {
+		if (!textArea){
+			textArea = document.getElementById("textArea") as HTMLInputElement
+		}
 		textArea.style.height = "0px"
-		textArea.style.height = textArea.scrollHeight.toString() + "px"
+		textArea.style.height = (textArea.scrollHeight + 1).toString() + "px"
 	}
 
 	// Scrolling
@@ -88,6 +91,7 @@ const Home: NextPage = () => {
 
 	useEffect(() => {
 		document.addEventListener("keypress", keyListener, false)
+		document.addEventListener("paste", ()=>resizeElement(), false)
 	}, [])
 
 	// add listener at mount
