@@ -16,9 +16,11 @@ const Home: NextPage = () => {
 	// when font size is changing
 	const fontSizeInput = (e: MouseEvent, up: boolean)=>{
 		e.preventDefault()
-		const textarea = document.getElementById('textArea') as HTMLInputElement
-
 		const newFontSize = up ? fontSize + 4 : fontSize - 4
+		changeFontSize(newFontSize)
+	}
+	const changeFontSize = (newFontSize: number) => {
+		const textarea = document.getElementById('textArea') as HTMLInputElement
 		textarea.style.fontSize = newFontSize.toString() + 'px'
 		localStorage.setItem("fontSize", newFontSize.toString())
 		setFontSize(newFontSize)
@@ -26,6 +28,7 @@ const Home: NextPage = () => {
 		// Hack to fix textarea resizing
 		resizeElement(textarea)
 	}
+
 	// everytime the form is changed
 	const resizeElementInput = (e: FormEvent) => {
 		resizeElement(e.target as HTMLInputElement)
@@ -94,9 +97,9 @@ const Home: NextPage = () => {
 		document.addEventListener("keypress", keyListener, false)
 		document.addEventListener("paste", ()=>resizeElement(), false)
 
-		if (localStorage.getItem("speed")) setSpeedVal(parseInt(localStorage.getItem("speed")!))
+		if (localStorage.getItem("speed")) changeSpeed(parseInt(localStorage.getItem("speed")!))
 		else localStorage.setItem("speed", speedVal.toString())
-		if (localStorage.getItem("fontSize")) setFontSize(parseInt(localStorage.getItem("fontSize")!))
+		if (localStorage.getItem("fontSize")) changeFontSize(parseInt(localStorage.getItem("fontSize")!))
 		else localStorage.setItem("fontSize", fontSize.toString())
 	}, [])
 
@@ -108,9 +111,13 @@ const Home: NextPage = () => {
 	}, [isScrolling])
 
 
-	const changeSpeed = (e: MouseEvent, up: boolean)=>{
+	const changeSpeedInput = (e: MouseEvent, up: boolean)=>{
 		e.preventDefault()
 		const newSpeed = speedVal + (up ? 1 : -1)
+		changeSpeed(newSpeed)
+	}
+
+	const changeSpeed = (newSpeed: number)=>{
 		localStorage.setItem("speed", newSpeed.toString())
 		setSpeedVal(newSpeed)
 		setSpeedObj(speed(newSpeed))
@@ -145,9 +152,9 @@ const Home: NextPage = () => {
 					{/* Scroll Speed */}
 					<div className="flex flex-row items-end gap-x-2">
 						<p className="self-center">Scroll Speed:</p>
-						<button onClick={(e) => { changeSpeed(e, false) }} className="font-bold border-2 leading-none p-1 rounded-md">-</button>
+						<button onClick={(e) => { changeSpeedInput(e, false) }} className="font-bold border-2 leading-none p-1 rounded-md">-</button>
 						<p className="self-center">{speedVal}</p>
-						<button onClick={(e) => { changeSpeed(e, true) }} className="font-bold border-2 leading-none p-1 rounded-md">+</button>
+						<button onClick={(e) => { changeSpeedInput(e, true) }} className="font-bold border-2 leading-none p-1 rounded-md">+</button>
 					</div>
 
 					{/* Font size */}
