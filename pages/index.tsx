@@ -12,6 +12,10 @@ const Home: NextPage = () => {
 	let [fontSize, setFontSize] = useState<number>(48)
 	const [hack, setHack] = useState<boolean>(false)
 
+	const [minFontSize, maxFontSize] = [0, 100]
+	const [minSpeed, maxSpeed] = [0, 16]
+
+
 	// Textbox resizing
 	// when font size is changing
 	const fontSizeInput = (e: MouseEvent, up: boolean)=>{
@@ -20,6 +24,7 @@ const Home: NextPage = () => {
 		changeFontSize(newFontSize)
 	}
 	const changeFontSize = (newFontSize: number) => {
+		if(newFontSize < minFontSize || newFontSize > maxFontSize) return
 		const textarea = document.getElementById('textArea') as HTMLInputElement
 		textarea.style.fontSize = newFontSize.toString() + 'px'
 		localStorage.setItem("fontSize", newFontSize.toString())
@@ -118,6 +123,7 @@ const Home: NextPage = () => {
 	}
 
 	const changeSpeed = (newSpeed: number)=>{
+		if(newSpeed < minSpeed || newSpeed > maxSpeed) return
 		localStorage.setItem("speed", newSpeed.toString())
 		setSpeedVal(newSpeed)
 		setSpeedObj(speed(newSpeed))
@@ -152,17 +158,17 @@ const Home: NextPage = () => {
 					{/* Scroll Speed */}
 					<div className="flex flex-row items-end gap-x-2">
 						<p className="self-center">Scroll Speed:</p>
-						<button onClick={(e) => { changeSpeedInput(e, false) }} className="font-bold border-2 leading-none p-1 rounded-md">-</button>
+						<button onClick={(e) => { changeSpeedInput(e, false) }} disabled={speedVal == minSpeed} className="font-bold border-2 leading-none p-1 rounded-md disabled:text-gray-300">-</button>
 						<p className="self-center">{speedVal}</p>
-						<button onClick={(e) => { changeSpeedInput(e, true) }} className="font-bold border-2 leading-none p-1 rounded-md">+</button>
+						<button onClick={(e) => { changeSpeedInput(e, true) }} disabled={speedVal == maxSpeed} className="font-bold border-2 leading-none p-1 rounded-md disabled:text-gray-300">+</button>
 					</div>
 
 					{/* Font size */}
 					<div className="flex flex-row items-end gap-x-2">
 						<p className="self-center">Font Size:</p>
-						<button onClick={(e)=>{fontSizeInput(e, false)}} className="font-bold border-2 leading-none p-1 rounded-md">-</button>
+						<button onClick={(e) => { fontSizeInput(e, false) }} disabled={fontSize == minFontSize} className="font-bold border-2 leading-none p-1 rounded-md disabled:text-gray-300">-</button>
 						<p className="self-center">{fontSize}</p>
-						<button onClick={(e)=>{fontSizeInput(e, true)}} className="font-bold border-2 leading-none p-1 rounded-md">+</button>
+						<button onClick={(e)=>{fontSizeInput(e, true)}} disabled={fontSize == maxFontSize} className="font-bold border-2 leading-none p-1 rounded-md disabled:text-gray-300">+</button>
 					</div>
 
 					<p> Click Space to start scrolling </p>
