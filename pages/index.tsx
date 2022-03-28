@@ -3,6 +3,8 @@ import Head from "next/head"
 import { FormEvent, useEffect, useState, MouseEvent} from 'react'
 import speed from "../util/speed"
 import speedType from "../types/speed"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home: NextPage = () => {
 	let [isScrolling, setIsScrolling] = useState<boolean>()
@@ -61,6 +63,16 @@ const Home: NextPage = () => {
 
 		//don't scroll to far
 		if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
+			// TODO end reached
+			toast.info('End reached', {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: true,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
 			setIsScrolling(false)
 			return
 		}
@@ -85,7 +97,7 @@ const Home: NextPage = () => {
 			setScrollTimeout(undefined)
 		}
 		else{
-			console.error("[Stop function] Scroll timeout does not exist")
+			console.error("[Stop function] Scroll timeout does not exist.")
 		}
 	}
 
@@ -111,8 +123,31 @@ const Home: NextPage = () => {
 	// add listener at mount
 	useEffect(()=>{
 		if(typeof isScrolling === "undefined") return
-		if (isScrolling) forward()
-		else stop()
+		if (isScrolling){
+			// Check not too far
+			const scrollContainer = document.getElementById("scrollContainer")!
+			if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
+				// TODO end reached
+				console.log("end reached")
+				toast.info('End reached', {
+					position: "top-right",
+					autoClose: 3000,
+					hideProgressBar: true,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				});
+				setIsScrolling(false)
+				return
+			}
+			forward()
+		}
+		else{
+			const scrollContainer = document.getElementById("scrollContainer")!
+			if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) return
+			stop()
+		}
 	}, [isScrolling])
 
 
@@ -143,6 +178,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<div id="parent" className="relative bg-black">
+				<ToastContainer />
 				{/* Topbar */}
 				<div className="absolute top-2 w-[93%] z-10 center-x bg-white p-2 rounded-md text-lg flex flex-row items-center gap-x-4">
 					{/* play and pause */}
